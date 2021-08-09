@@ -1,18 +1,13 @@
 ## 4 Feladat: Email mező
 
-import time
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
-import csv
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import Select
-from random import randint
 
-driver = webdriver.Chrome()
-# driver = webdriver.Chrome(ChromeDriverManager().install())
+
+driver = webdriver.Chrome(ChromeDriverManager().install())
 driver.get('https://black-moss-0a0440e03.azurestaticapps.net/mm43.html')
 
 
