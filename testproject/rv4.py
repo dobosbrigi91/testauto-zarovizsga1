@@ -19,11 +19,20 @@ time.sleep(5)
 
 
 cities = driver.find_element_by_id('cites')
-cities_ = str(cities.text).replace('"', '')
-cities_list = sorted(cities_.replace(',', '').split())
-
+cities_list = str(cities.text).replace('"', ',')
+cities_list = cities_list.strip().split(',')
+print(cities_list)
 random = []
 random_cities = driver.find_elements_by_xpath('//ul/li')
-for city in random_cities:
-    random.append(sorted(city.text))
 
+for city in random_cities:
+    if not city.text in cities_list:
+        print(city.text, 'hiányzik')
+    else:
+        print(city.text, 'bennevan')
+
+
+
+#driver.find_element_by_id('missingCity').send_keys(missing_city)
+
+#driver.find_element_by_id('submit').click()
