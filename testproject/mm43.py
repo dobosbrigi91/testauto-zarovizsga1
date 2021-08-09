@@ -12,8 +12,9 @@ from selenium.webdriver.support.ui import Select
 from random import randint
 
 driver = webdriver.Chrome()
-#driver = webdriver.Chrome(ChromeDriverManager().install())
+# driver = webdriver.Chrome(ChromeDriverManager().install())
 driver.get('https://black-moss-0a0440e03.azurestaticapps.net/mm43.html')
+
 
 # email cím kitöltése és kattintás a 'Submit Now!' gombra
 
@@ -28,30 +29,30 @@ def email_valid(email):
     driver.find_element_by_id('submit').click()
 
 
-error_message = driver.find_element_by_xpath('//div[@class="validation-error"]')
+try:
+    # * Helyes kitöltés esete:
+    #     * email: teszt@elek.hu
+    #     * Nincs validációs hibazüzenet
 
-if error_message:
-# * Helyes kitöltés esete:
-#     * email: teszt@elek.hu
-#     * Nincs validációs hibazüzenet
+    email_valid('teszt@elek.hu')
+    error_message = driver.find_element_by_xpath('//div[@class="validation-error"]')
+    assert error_message.is_displayed()
 
-email_valid('teszt@elek.hu')
-error_message = driver.find_element_by_xpath('//div[@class="validation-error"]').is_displayed()
-assert error_message.is_displayed()
+    # * Helytelen:
+    #     * email: teszt@
+    #     * Please enter a part following '@'. 'teszt@' is incomplete.
 
-# * Helytelen:
-#     * email: teszt@
-#     * Please enter a part following '@'. 'teszt@' is incomplete.
+    email_valid('teszt@')
+    helytelen_error_message = driver.find_element_by_xpath('//div[@class="validation-error"]').text
+    assert helytelen_error_message == 'Kérjük, adja meg a „@” utáni részt is. A(z) „teszt@” cím nem teljes.'
 
-email_valid('teszt@')
-helytelen_error_message = driver.find_element_by_xpath('//div[@class="validation-error"]').text
-assert helytelen_error_message == 'Kérjük, adja meg a „@” utáni részt is. A(z) „teszt@” cím nem teljes.'
+    # * Üres:
+    #     * email: <üres>
+    #     * b: <üres>
+    #     * Please fill out this field.
 
-# * Üres:
-#     * email: <üres>
-#     * b: <üres>
-#     * Please fill out this field.
-
-email_valid('')
-ures_error_message = driver.find_element_by_xpath('//div[@class="validation-error"]').text
-assert ures_error_message == 'Kérjük, töltse ki ezt a mezőt.'
+    email_valid('')
+    ures_error_message = driver.find_element_by_xpath('//div[@class="validation-error"]').text
+    assert ures_error_message == 'Kérjük, töltse ki ezt a mezőt.'
+finally:
+    driver.close()
